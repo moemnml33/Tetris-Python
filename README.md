@@ -83,5 +83,12 @@ In the eightth commit we are testing for block collisions. For that we are creat
 ### Result: blocks stacking up
 ![](images/eightth_commit_collision.png)
 
+## Nineth commit - adding colours:
+
+In the nineth commit we are assigning a random colour to each upcoming block. Also we are setting the game board to preserve the block colour rather than setting it to green.
+
+### Result: 
+![](images/nineth_commit_colours.png)
+
 
 

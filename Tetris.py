@@ -30,15 +30,28 @@ blocks = [
     [[1, 2, 5, 8], [5, 6, 7, 8], [0, 3, 6, 7], [0, 1, 2, 3]],  # 5: L 2 shape
     [[4, 6, 7, 8], [0, 3, 4, 6], [0, 1, 2, 4], [2, 4, 5, 8]]  # 6: one on three
 ]
+
+# colours
+colours = [
+    (76, 201, 240),
+    (0, 245, 212),
+    (67, 97, 238),
+    (58, 12, 163),
+    (114, 9, 183),
+    (181, 23, 158),
+    (247, 37, 133)
+]
+
 # block class
 class Block:
     # constructor
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.type = random.randint(0, 6)   # select the shape from the blocks list
+        self.type = random.randint(0, len(blocks) - 1)   # select the shape from the blocks list
         self.rotation = 0   # select the variation of the shape (ex: straight vs. rotated) from the blocks list
-    
+        self.colour = colours[random.randint(0, len(colours) - 1)]
+
     # pick the shape from the list based on the values in the constructor above
     def shape(self):
         return blocks[self.type][self.rotation]
@@ -49,7 +62,7 @@ def draw_block():
     for y in range(3):
         for x in range(3):
             if y * 3 + x in block.shape():
-                pygame.draw.rect(screen, (255, 255, 255), 
+                pygame.draw.rect(screen, block.colour, 
                                  # x: location of each specific block in its 3x3 matrix
                                  # block.x: location that we want on the grid
                                  # + 1 and - 2: so the block does not overlap with grid
@@ -94,7 +107,7 @@ def drop_block():
         for y in range(3):
             for x in range(3):
                 if y * 3 + x in block.shape():
-                    game_board[block.x + x][block.y + y] = (0, 255, 0)
+                    game_board[block.x + x][block.y + y] = block.colour
     return can_drop
 
 # side move function
