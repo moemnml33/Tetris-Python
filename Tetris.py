@@ -12,6 +12,10 @@ def draw_grid(cols, rows, grid_size, x_gap, y_gap):
             # draw rect onto screen, colour grey, rectangle parameters, draw border only
             pygame.draw.rect(screen, (100, 100, 100), 
                              [x * grid_size + x_gap, y * grid_size + y_gap, grid_size, grid_size], 1)
+            # if not black, then draw gameboard
+            if game_board[x][y] != (0, 0, 0):
+                pygame.draw.rect(screen, game_board[x][y], 
+                             [x * grid_size + x_gap + 1, y * grid_size + y_gap + 1, grid_size - 2, grid_size - 2])
 
 # defining the blocks
 # each shape is contained within a 3x3 matrix
@@ -53,6 +57,7 @@ def draw_block():
                                  grid_size - 2, 
                                  grid_size - 2])
 
+
 # drop block function
 def drop_block():
     can_drop = True
@@ -64,6 +69,13 @@ def drop_block():
                     can_drop = False
     if can_drop:
         block.y += 1
+    # if block reaches the bottom, set its colour to green and set it to None
+    else:
+        for y in range(3):
+            for x in range(3):
+                if y * 3 + x in block.shape():
+                    game_board[block.x + x][block.y + y] = (0, 255, 0)
+    return can_drop
 
 # side move function
 def side_move(dx):
@@ -87,6 +99,15 @@ rows = screen.get_height() // grid_size
 x_gap = (screen.get_width() - cols * grid_size) // 2
 y_gap = (screen.get_height() - rows * grid_size) // 2
 
+# game board
+# initialize as a list containing blocks of colour black
+game_board = []
+for i in range(cols):
+    new_col = []
+    for j in range(rows):
+        new_col.append((0, 0, 0))
+    game_board.append(new_col)
+
 # main game loop
 game_over = False
 clock = pygame.time.Clock()
@@ -98,6 +119,8 @@ while not game_over:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
+            continue
+    # move left and right
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT:
             side_move(-1)
@@ -108,12 +131,18 @@ while not game_over:
     
     # draw grid
     draw_grid(cols, rows, grid_size, x_gap, y_gap)
-    # draw block to test
-    draw_block()
-    # allow block to slide sideways
-    if event.type != pygame.KEYDOWN:
-        # drop block
-        drop_block()
+    # if block is not none then draw it
+    if block is not None:
+        # draw block to test
+        draw_block()
+        # allow block to slide sideways
+        if event.type != pygame.KEYDOWN:
+            # draw block
+            # if the shape reaches the bottom then we don't need it anymore
+            # instead it's gonna be set to none and added to the gameboard
+            if not drop_block():
+                block = None
+
     # update display after each iteration
     pygame.display.update()
 

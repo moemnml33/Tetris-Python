@@ -43,4 +43,13 @@ In the fourth step we are moving the blocks on the grid. First we are dropping t
 ### Shape reaching the end of the screen:
 ![](images/fourth_commit_bottom.png)
 
+## Fifth commit - creating a game board:
+
+In the fifth step we are creating a board for the game. The board is a list contaning colour values. At first, we initialize it containing all black colours. Then, as an example, when a block reaches the bottom of the screen, we're not going to need it anymore; so we set the block to None, we set its coordinates in the game board to hold the green value, and we draw the game board on the grid as long as the colour is different than black.
+
+### Before hitting the bottom of the screen:
+![](images/fifth_commit_game_board_1.png)
+
+### After hitting the bottom of the screen:
+![](images/fifth_commit_game_board_2.png)
 
