@@ -58,14 +58,34 @@ def draw_block():
                                  grid_size - 2, 
                                  grid_size - 2])
 
+# collides function
+def collides(next_x, next_y):
+    collision = False
+    for y in range(3):
+        for x in range(3):
+            if y * 3 + x in block.shape():
+                # if collides with the left or right of the screen
+                if x + block.x + next_x < 0 or x + block.x + next_x > cols - 1:
+                    collision = True
+                    break
+                # if collides with the top or bottom of the screen
+                if y + block.y + next_y < 0 or y + block.y + next_y > rows - 1:
+                    collision = True
+                    break
+                # if collides with the next element of the game board
+                if game_board[block.x + x + next_x][block.y + y + next_y] != (0, 0, 0):
+                    collision = True
+                    break
+    return collision
+
 # drop block function
 def drop_block():
     can_drop = True
     for y in range(3):
         for x in range(3):
             if y * 3 + x in block.shape():
-                # if block hits the bottom of the screen
-                if block.y + y >= rows - 1:
+                # if block collides with another block or hits the bottom of the screen
+                if collides(0, 1):
                     can_drop = False
     if can_drop:
         block.y += 1
@@ -83,12 +103,10 @@ def side_move(dx):
     for y in range(3):
         for x in range(3):
             if y * 3 + x in block.shape():
-                # if you reach the right edge and tring to move the block to the right
-                if block.x + x >= cols - 1 and dx == 1:
+                # if block collides with right or left edge
+                if collides(dx, 0):
                     can_move = False
-                # if you reach the left edge and tring to move the block to the left    
-                elif block.x + x < 1 and dx == -1:
-                    can_move = False
+
     if can_move:
         block.x += dx
     # if shape reaches left or right edge drop instead of holding
@@ -104,10 +122,8 @@ def rotate():
     for y in range(3):
         for x in range(3):
             if y * 3 + x in block.shape():
-                # if block hit the bottom, right edge, left edge
-                if block.y + y >= rows - 1 or \
-                    block.x + x >= cols - 1 or \
-                    block.x + x < 1:
+                # if block collides with the bottom, right and left edge
+                if collides(0, 0):
                         can_rotate = False
     if not can_rotate:
         block.rotation = last_rotation 

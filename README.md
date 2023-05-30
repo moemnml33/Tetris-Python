@@ -68,10 +68,20 @@ In the sixth step we are spawning a new block each time a previous block reaches
 
 ## Seventh commit - rotating the blocks:
 
-In the seventh step we are rotating the blocks on the key up event. When a player presses the key up, the shape will be changed to the shape that comes right after the current one from the blocks list. The boundarie for the rotation are set as well, as you can't rotate a shape while exceeding the screen boundaries.
+In the seventh step we are rotating the blocks on the key up event. When a player presses the key up, the shape will be changed to the shape that comes right after the current one from the blocks list. The boundaries for the rotation are set as well, as you can't rotate a shape while exceeding the screen boundaries.
 
 ### Before the rotation:
-![](images/seventh_commit_rotation_1.png.png)
+![](images/seventh_commit_rotation_1.png)
 
 ### After the rotation:
-![](images/seventh_commit_rotation_2.png.png)
+![](images/seventh_commit_rotation_2.png)
+
+## Eightth commit - testing for block collision:
+
+In the eightth commit we are testing for block collisions. For that we are creating a collision function that tests if the next step is the bottom edge, left and right edges, or if it's a spot occupied by the game board. We then use that function and replace it in all other functions that needs a collision check.
+
+### Result: blocks stacking up
+![](images/eightth_commit_collision.png)
+
+
+
