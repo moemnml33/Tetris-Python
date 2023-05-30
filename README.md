@@ -53,3 +53,16 @@ In the fifth step we are creating a board for the game. The board is a list cont
 ### After hitting the bottom of the screen:
 ![](images/fifth_commit_game_board_2.png)
 
+## Sixth commit - spawning new blocks:
+
+In the sixth step we are spawning a new block each time a previous block reaches the bottom of the screen. Each new spawned block shape and position on the screen are randomly picked. 
+
+### Spawn 1:
+![](images/sixth_commit_new_block_1.png)
+
+### Spawn 2:
+![](images/sixth_commit_new_block_2.png)
+
+### Spawn 3:
+![](images/sixth_commit_new_block_3.png)
+

@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import random
 pygame.init()
 # create window
 screen = pygame.display.set_mode((500, 600))
@@ -35,7 +36,7 @@ class Block:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.type = 1   # select the shape from the blocks list
+        self.type = random.randint(0, 6)   # select the shape from the blocks list
         self.rotation = 0   # select the variation of the shape (ex: straight vs. rotated) from the blocks list
     
     # pick the shape from the list based on the values in the constructor above
@@ -56,7 +57,6 @@ def draw_block():
                                  (y + block.y) * grid_size + y_gap + 1,
                                  grid_size - 2, 
                                  grid_size - 2])
-
 
 # drop block function
 def drop_block():
@@ -91,6 +91,9 @@ def side_move(dx):
                     can_move = False
     if can_move:
         block.x += dx
+    # if shape reaches left or right edge drop instead of holding
+    else:
+        drop_block()
 
 # grid size, cols, rows, x and y gaps variables to draw grid
 grid_size = 30
@@ -111,10 +114,11 @@ for i in range(cols):
 # main game loop
 game_over = False
 clock = pygame.time.Clock()
-fps = 5
+fps = 8
 # block object to test
-block = Block(5, 6)
+block = Block((cols - 1)// 2, 0)
 while not game_over:
+    screen.fill((0, 0, 0))
     clock.tick(fps)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -126,9 +130,7 @@ while not game_over:
             side_move(-1)
         if event.key == pygame.K_RIGHT:
             side_move(1)
-    
-    screen.fill((0, 0, 0))
-    
+
     # draw grid
     draw_grid(cols, rows, grid_size, x_gap, y_gap)
     # if block is not none then draw it
@@ -140,8 +142,10 @@ while not game_over:
             # draw block
             # if the shape reaches the bottom then we don't need it anymore
             # instead it's gonna be set to none and added to the gameboard
+            # then create a new block at a random spot
             if not drop_block():
                 block = None
+                block = Block(random.randint(3 , cols - 3), 0)
 
     # update display after each iteration
     pygame.display.update()
