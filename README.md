@@ -90,5 +90,12 @@ In the nineth commit we are assigning a random colour to each upcoming block. Al
 ### Result: 
 ![](images/nineth_commit_colours.png)
 
+## Tenth commit - removing lines:
 
+In the tenth commit we are removing complete lines and diplaying the score on the screen. The find_lines function iterates over the grid and checks if all blocks on that line are part of the game board. If this is true, it means that we hit a full line, and in this case we iterate to replace the current line with the line that's above it; in other words, we remove the current line and push each line above it one block down. We store the removed lines count and use it as the player's score.
 
+### Before forming a full line:
+![](images/tenth_commit_removing_block_score_display_1.png)
+
+### After forming a full line:
+![](images/tenth_commit_removing_block_score_display_2.png)

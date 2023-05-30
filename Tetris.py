@@ -6,17 +6,21 @@ pygame.init()
 screen = pygame.display.set_mode((500, 600))
 pygame.display.set_caption("Tetris")
 
-# draw grid function
-def draw_grid(cols, rows, grid_size, x_gap, y_gap):
-    for y in range(rows): # rows
-        for x in range(cols): # columns
-            # draw rect onto screen, colour grey, rectangle parameters, draw border only
-            pygame.draw.rect(screen, (100, 100, 100), 
-                             [x * grid_size + x_gap, y * grid_size + y_gap, grid_size, grid_size], 1)
-            # if not black, then draw gameboard
-            if game_board[x][y] != (0, 0, 0):
-                pygame.draw.rect(screen, game_board[x][y], 
-                             [x * grid_size + x_gap + 1, y * grid_size + y_gap + 1, grid_size - 2, grid_size - 2])
+# grid size, cols, rows, x and y gaps variables to draw grid
+grid_size = 30
+cols = screen.get_width() // grid_size
+rows = screen.get_height() // grid_size
+x_gap = (screen.get_width() - cols * grid_size) // 2
+y_gap = (screen.get_height() - rows * grid_size) // 2
+
+# game board
+# initialize as a list containing blocks of colour black
+game_board = []
+for i in range(cols):
+    new_col = []
+    for j in range(rows):
+        new_col.append((0, 0, 0))
+    game_board.append(new_col)
 
 # defining the blocks
 # each shape is contained within a 3x3 matrix
@@ -55,6 +59,18 @@ class Block:
     # pick the shape from the list based on the values in the constructor above
     def shape(self):
         return blocks[self.type][self.rotation]
+
+# draw grid function
+def draw_grid(cols, rows, grid_size, x_gap, y_gap):
+    for y in range(rows): # rows
+        for x in range(cols): # columns
+            # draw rect onto screen, colour grey, rectangle parameters, draw border only
+            pygame.draw.rect(screen, (100, 100, 100), 
+                             [x * grid_size + x_gap, y * grid_size + y_gap, grid_size, grid_size], 1)
+            # if not black, then draw gameboard
+            if game_board[x][y] != (0, 0, 0):
+                pygame.draw.rect(screen, game_board[x][y], 
+                             [x * grid_size + x_gap + 1, y * grid_size + y_gap + 1, grid_size - 2, grid_size - 2])
 
 # draw block function
 def draw_block():
@@ -140,29 +156,33 @@ def rotate():
                         can_rotate = False
     if not can_rotate:
         block.rotation = last_rotation 
-    
 
-# grid size, cols, rows, x and y gaps variables to draw grid
-grid_size = 30
-cols = screen.get_width() // grid_size
-rows = screen.get_height() // grid_size
-x_gap = (screen.get_width() - cols * grid_size) // 2
-y_gap = (screen.get_height() - rows * grid_size) // 2
-
-# game board
-# initialize as a list containing blocks of colour black
-game_board = []
-for i in range(cols):
-    new_col = []
-    for j in range(rows):
-        new_col.append((0, 0, 0))
-    game_board.append(new_col)
+# find complete lines
+def find_lines():
+    lines = 0
+    for y in range(rows):
+        empty = 0
+        for x in range(cols):
+            if game_board[x][y] == (0, 0, 0):
+                empty += 1
+        # if line contains no black blocks means it's a full line
+        if empty == 0:
+            lines += 1
+            # range from the line that we found all the way up to top of the grid
+            for y2 in range(y, 1, -1):
+                for x2 in range(cols):
+                    # make current line equal to the line above it
+                    # in other words, remove current line and bring down all lines that were on top of it
+                    game_board[x2][y2] = game_board[x2][y2 - 1]
+    return lines
 
 # main game loop
 game_over = False
+score = 0
 clock = pygame.time.Clock()
 fps = 8
-# block object to test
+font = pygame.font.SysFont('Arial', 25, True, False)
+# first block object at pos middle 
 block = Block((cols - 1)// 2, 0)
 while not game_over:
     screen.fill((0, 0, 0))
@@ -174,18 +194,21 @@ while not game_over:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 rotate()
+                continue
     # move left and right
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT:
             side_move(-1)
         elif event.key == pygame.K_RIGHT:
             side_move(1)
+        elif event.key == pygame.K_DOWN:
+                continue
 
     # draw grid
     draw_grid(cols, rows, grid_size, x_gap, y_gap)
     # if block is not none then draw it
     if block is not None:
-        # draw block to test
+        # draw block
         draw_block()
         # allow block to slide sideways
         if event.type != pygame.KEYDOWN:
@@ -194,9 +217,11 @@ while not game_over:
             # instead it's gonna be set to none and added to the gameboard
             # then create a new block at a random spot
             if not drop_block():
+                score += find_lines()
                 block = None
                 block = Block(random.randint(3 , cols - 3), 0)
-
+    text = font.render('Score: ' + str(score), True, (255, 255, 255))
+    screen.blit(text, [0, 0])
     # update display after each iteration
     pygame.display.update()
 
