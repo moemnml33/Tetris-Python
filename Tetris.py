@@ -45,13 +45,40 @@ def draw_block():
         for x in range(3):
             if y * 3 + x in block.shape():
                 pygame.draw.rect(screen, (255, 255, 255), 
-                                 # x: location of block in its 3x3 matrix
+                                 # x: location of each specific block in its 3x3 matrix
                                  # block.x: location that we want on the grid
                                  # + 1 and - 2: so the block does not overlap with grid
                                  [(x + block.x) * grid_size + x_gap + 1, 
                                  (y + block.y) * grid_size + y_gap + 1,
                                  grid_size - 2, 
                                  grid_size - 2])
+
+# drop block function
+def drop_block():
+    can_drop = True
+    for y in range(3):
+        for x in range(3):
+            if y * 3 + x in block.shape():
+                # if block hits the bottom of the screen
+                if block.y + y >= rows - 1:
+                    can_drop = False
+    if can_drop:
+        block.y += 1
+
+# side move function
+def side_move(dx):
+    can_move = True
+    for y in range(3):
+        for x in range(3):
+            if y * 3 + x in block.shape():
+                # if you reach the right edge and tring to move the block to the right
+                if block.x + x >= cols - 1 and dx == 1:
+                    can_move = False
+                # if you reach the left edge and tring to move the block to the left    
+                elif block.x + x < 1 and dx == -1:
+                    can_move = False
+    if can_move:
+        block.x += dx
 
 # grid size, cols, rows, x and y gaps variables to draw grid
 grid_size = 30
@@ -63,21 +90,30 @@ y_gap = (screen.get_height() - rows * grid_size) // 2
 # main game loop
 game_over = False
 clock = pygame.time.Clock()
+fps = 5
 # block object to test
 block = Block(5, 6)
 while not game_over:
-    # help limit the runtime speed of the game 
-    # the program will never run at more than 50 frames per second. 
-    dt = clock.tick(50)
+    clock.tick(fps)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            side_move(-1)
+        if event.key == pygame.K_RIGHT:
+            side_move(1)
+    
     screen.fill((0, 0, 0))
     
     # draw grid
     draw_grid(cols, rows, grid_size, x_gap, y_gap)
     # draw block to test
     draw_block()
+    # allow block to slide sideways
+    if event.type != pygame.KEYDOWN:
+        # drop block
+        drop_block()
     # update display after each iteration
     pygame.display.update()
 
