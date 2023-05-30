@@ -90,7 +90,7 @@ In the nineth commit we are assigning a random colour to each upcoming block. Al
 ### Result: 
 ![](images/nineth_commit_colours.png)
 
-## Tenth commit - removing lines:
+## Tenth commit - removing lines and displaying the score:
 
 In the tenth commit we are removing complete lines and diplaying the score on the screen. The find_lines function iterates over the grid and checks if all blocks on that line are part of the game board. If this is true, it means that we hit a full line, and in this case we iterate to replace the current line with the line that's above it; in other words, we remove the current line and push each line above it one block down. We store the removed lines count and use it as the player's score.
 
@@ -99,3 +99,12 @@ In the tenth commit we are removing complete lines and diplaying the score on th
 
 ### After forming a full line:
 ![](images/tenth_commit_removing_block_score_display_2.png)
+
+## Eleventh commit - game fininshed:
+
+In the eleventh and last commit we set the end of the game. The game as we all know, ends when there's no more rooms to spawn new blocks. When that happens we stop the game, freeze the screen and display a game over message. All that happens in the main game loop.
+
+### Game finished:
+![](images/eleventh_commit_game_finished.png)
+
+The end :)

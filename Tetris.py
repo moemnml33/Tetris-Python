@@ -182,6 +182,11 @@ score = 0
 clock = pygame.time.Clock()
 fps = 8
 font = pygame.font.SysFont('Arial', 25, True, False)
+font2 = pygame.font.SysFont('Arial', 30, True, False)
+game_finished_text = font2.render("GAME OVER", True, (255, 255, 255))
+game_finished_text_pos = ((screen.get_width() - game_finished_text.get_width()) // 2, 
+                     (screen.get_height() - game_finished_text.get_height()) // 2)
+game_finished = False
 # first block object at pos middle 
 block = Block((cols - 1)// 2, 0)
 while not game_over:
@@ -216,12 +221,19 @@ while not game_over:
             # if the shape reaches the bottom then we don't need it anymore
             # instead it's gonna be set to none and added to the gameboard
             # then create a new block at a random spot
-            if not drop_block():
+            if not drop_block() and not game_finished:
                 score += find_lines()
                 block = None
                 block = Block(random.randint(3 , cols - 3), 0)
+                # if spawning block collides with another block, set game finished to true
+                if collides(0, 0):
+                    game_finished = True
+    # display score
     text = font.render('Score: ' + str(score), True, (255, 255, 255))
     screen.blit(text, [0, 0])
+    # if game finished is true display game over message
+    if game_finished:
+        screen.blit(game_finished_text, game_finished_text_pos)
     # update display after each iteration
     pygame.display.update()
 
