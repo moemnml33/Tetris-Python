@@ -66,3 +66,12 @@ In the sixth step we are spawning a new block each time a previous block reaches
 ### Spawn 3:
 ![](images/sixth_commit_new_block_3.png)
 
+## Seventh commit - rotating the blocks:
+
+In the seventh step we are rotating the blocks on the key up event. When a player presses the key up, the shape will be changed to the shape that comes right after the current one from the blocks list. The boundarie for the rotation are set as well, as you can't rotate a shape while exceeding the screen boundaries.
+
+### Before the rotation:
+![](images/seventh_commit_rotation_1.png.png)
+
+### After the rotation:
+![](images/seventh_commit_rotation_2.png.png)
